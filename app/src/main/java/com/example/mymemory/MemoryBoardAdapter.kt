@@ -1,9 +1,12 @@
 package com.example.mymemory
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.min
@@ -15,6 +18,7 @@ class MemoryBoardAdapter(private val context: Context, private val numPieces: In
     /*We're going to define a constant which is the margin size.*/
     companion object {
         private const val MARGIN_SIZE = 10
+        private const val TAG = "MemoryBoardAdapter"
     }
 
 
@@ -42,9 +46,12 @@ class MemoryBoardAdapter(private val context: Context, private val numPieces: In
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(position: Int) {
-            //no op
+        private val imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
 
+        fun bind(position: Int) {
+            imageButton.setOnClickListener {
+                Log.i(TAG, "Clicked on position $position")
+            }
         }
     }
 }
