@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mymemory.models.BoardSize
 import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
@@ -12,6 +13,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvBoard: RecyclerView
     private lateinit var tvNumMoves: TextView
     private lateinit var tvNumPairs: TextView
+
+    private var boardSize: BoardSize = BoardSize.HARD
     /*these are late init vars because they will be set in the onCreate method, not created
     at the time of construction of the Main Activity.
      */
@@ -31,9 +34,9 @@ class MainActivity : AppCompatActivity() {
        a binding for the data set to the views of the RecyclerView.
          */
          */
-         rvBoard.adapter = MemoryBoardAdapter(this, 8)
+        rvBoard.adapter = MemoryBoardAdapter(this, boardSize)
         rvBoard.setHasFixedSize(true) //makes application more efficient
-        rvBoard.layoutManager = GridLayoutManager(this, 2)
+        rvBoard.layoutManager = GridLayoutManager(this, boardSize.getWidth())
 
     }
 }
