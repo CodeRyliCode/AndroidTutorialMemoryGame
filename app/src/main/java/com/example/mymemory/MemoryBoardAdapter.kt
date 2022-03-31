@@ -1,6 +1,5 @@
 package com.example.mymemory
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mymemory.models.BoardSize
 import kotlin.math.min
 
-class MemoryBoardAdapter(private val context: Context, private val boardSize: BoardSize) :
+class MemoryBoardAdapter(
+    private val context: Context,
+    private val boardSize: BoardSize,
+private val cardImages: List<Int>
+    ) :
     RecyclerView.Adapter<MemoryBoardAdapter.ViewHolder>() {
     /* a viewholder is an object which provides access to all the views of one recycler view element (one memory card of game) */
 
@@ -50,6 +53,7 @@ class MemoryBoardAdapter(private val context: Context, private val boardSize: Bo
         private val imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
 
         fun bind(position: Int) {
+            imageButton.setImageResource(cardImages[position])
             imageButton.setOnClickListener {
                 Log.i(TAG, "Clicked on position $position")
             }

@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymemory.models.BoardSize
-import org.w3c.dom.Text
+import com.example.mymemory.utils.DEFAULT_ICONS
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +26,9 @@ class MainActivity : AppCompatActivity() {
         rvBoard = findViewById(R.id.rvBoard)
         tvNumMoves = findViewById(R.id.tvNumMoves)
         tvNumPairs = findViewById(R.id.tvNumPairs)
+
+        val chosenImages : List<Int> = DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs())
+        val randomizedImages : List<Int> = (chosenImages + chosenImages).shuffled()
         /* in the onCreate, as soon as we've called setContentView, now we can set these newly defined variables
         equal to the corresponding view in the layout and we'll do that by calling a special method, findViewById
        and provide the Id that we assigned  /*
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity() {
        a binding for the data set to the views of the RecyclerView.
          */
          */
-        rvBoard.adapter = MemoryBoardAdapter(this, boardSize)
+        rvBoard.adapter = MemoryBoardAdapter(this, boardSize, randomizedImages)
         rvBoard.setHasFixedSize(true) //makes application more efficient
         rvBoard.layoutManager = GridLayoutManager(this, boardSize.getWidth())
 
