@@ -1,12 +1,15 @@
 package com.example.mymemory
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymemory.models.BoardSize
 import com.example.mymemory.models.MemoryCard
+import com.example.mymemory.models.MemoryGame
 import com.example.mymemory.utils.DEFAULT_ICONS
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvNumMoves: TextView
     private lateinit var tvNumPairs: TextView
 
+    private lateinit var memoryGame: MemoryGame
+    private lateinit var adapter: MemoryBoardAdapter
     private var boardSize: BoardSize = BoardSize.EASY
     /*these are late init vars because they will be set in the onCreate method, not created
     at the time of construction of the Main Activity.
@@ -28,9 +33,10 @@ class MainActivity : AppCompatActivity() {
         tvNumMoves = findViewById(R.id.tvNumMoves)
         tvNumPairs = findViewById(R.id.tvNumPairs)
 
-        val chosenImages : List<Int> = DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs())
-        val randomizedImages : List<Int> = (chosenImages + chosenImages).shuffled()
-        val memoryCards : List<MemoryCard> = randomizedImages.map{ MemoryCard(it)}
+        //Now we construct our memory game
+        memoryGame = MemoryGame(boardSize)
+
+
         /*Each randomized image that we have, this list of images that make up the memory game each of those wil
         correspond with one memory card and we want to create a list of these memory cards. We do this by utilizing
         map function on randomized images and for every element of randomized images we're going to do an operation and
@@ -45,9 +51,29 @@ class MainActivity : AppCompatActivity() {
        a binding for the data set to the views of the RecyclerView.
          */
          */
-        rvBoard.adapter = MemoryBoardAdapter(this, boardSize, memoryCards)
-        rvBoard.setHasFixedSize(true) //makes application more efficient
+     adapter = MemoryBoardAdapter(this, boardSize, memoryGame.cards, object : MemoryBoardAdapter.CardClickListener {
+                override fun onCardClicked(position: Int) {
+                    updateGameWithFlip(position)
+                    /*Here is where we add logic for toggling isFaceUp property of this card.*/
+                }
+
+            })
+        rvBoard.adapter = adapter
+            rvBoard.setHasFixedSize(true) //makes application more efficient
         rvBoard.layoutManager = GridLayoutManager(this, boardSize.getWidth())
+
+    }
+
+    private fun updateGameWithFlip(position: Int) {
+        //This method is responsible for updating the memory game with an attempted flip
+        //at this position. The memory game itself should be responsible for handling what happens in the state of the game
+        //when the memory card at this position is flipped.
+        memoryGame.flipCard(position)
+        /* once we flip the card, we need to tell the recyclerview adapter that the contents of what it's showing has changed
+        and so it should update itself. The way you do that is adapter.notifydatasetchain
+         */
+        adapter.notifyDataSetChanged()
+        
 
     }
 }
